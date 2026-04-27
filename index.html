@@ -19,6 +19,16 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; overflow-x: hidden; background-color: var(--bg-dark); color: var(--text-light); font-family: var(--font-body); }
 
+        /* --- ANIMAÇÃO SHAKE --- */
+        @keyframes shake {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1) rotate(10deg); }
+            50% { transform: scale(1.1) rotate(-10deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1); }
+        }
+        .shake-animation { animation: shake 0.5s ease-in-out; }
+
         /* --- HERO --- */
         .swiper-hero { width: 100%; max-width: 500px; padding: 20px 0; margin: 0 auto; }
         .swiper-hero img { max-width: 90%; max-height: 250px; border-radius: 12px; object-fit: contain; display: block; margin: 0 auto; }
@@ -42,25 +52,14 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* --- CARROSSEL PRODUTO --- */
+        /* --- CARROSSEL PRODUTO (HÍBRIDO) --- */
         .swiper-produto { width: 100%; height: 280px; margin-bottom: 20px; position: relative; overflow: hidden; }
-        .swiper-produto .swiper-slide { display: flex; justify-content: center; align-items: center; position: relative; }
+        .swiper-produto .swiper-slide { display: flex; justify-content: center; align-items: center; }
         .swiper-produto img { max-height: 260px; max-width: 100%; object-fit: contain; transition: opacity 0.4s ease; }
 
-        /* Estilo das Bolinhas (Bullets) */
-        .swiper-produto .swiper-pagination-bullet {
-            background: #ffffff !important;
-            opacity: 0.3; /* Branco apagado para as inativas */
-            width: 8px;
-            height: 8px;
-        }
-        .swiper-produto .swiper-pagination-bullet-active {
-            background: var(--gold-soft) !important;
-            opacity: 1 !important; /* Dourado brilhante para a ativa */
-            transform: scale(1.2);
-        }
+        .swiper-produto .swiper-pagination-bullet { background: #fff !important; opacity: 0.3; }
+        .swiper-produto .swiper-pagination-bullet-active { background: var(--gold-soft) !important; opacity: 1 !important; }
 
-        /* Computador (Hover) */
         @media (min-width: 1024px) {
             .swiper-produto .swiper-pagination { display: none !important; }
             .foto-2 { opacity: 0; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
@@ -68,25 +67,27 @@
             .card-produto:hover .foto-2 { opacity: 1; }
         }
 
-        /* Celular (Carrossel) */
         @media (max-width: 1023px) {
             .produtos-grid { display: flex; flex-direction: column; padding: 10px 20px 100px; }
         }
 
         .preco { font-family: var(--font-premium); font-size: 2.2rem; color: var(--gold-soft); margin-bottom: 20px; display: block; }
-        .btn-adicionar { background: var(--gold-metallic); color: #000; border: none; padding: 18px; width: 100%; font-weight: 700; cursor: pointer; border-radius: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-adicionar { background: var(--gold-metallic); color: #000; border: none; padding: 18px; width: 100%; font-weight: 700; cursor: pointer; border-radius: 10px; text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-body); }
 
         /* --- SACOLA --- */
-        .cart-toggle { position: fixed; bottom: 30px; right: 25px; background: var(--gold-metallic); width: 75px; height: 75px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2001; }
+        .cart-toggle { position: fixed; bottom: 30px; right: 25px; background: var(--gold-metallic); width: 75px; height: 75px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2001; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .cart-toggle svg { width: 35px; height: 35px; fill: #000; }
         .cart-count { position: absolute; top: 0; right: 0; background: #ff4444; color: white; min-width: 24px; height: 24px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; border: 2px solid #000; display: flex; justify-content: center; align-items: center; }
 
         .cart-overlay { position: fixed; top: 0; right: -100%; width: 100%; max-width: 450px; height: 100vh; background: var(--bg-card); z-index: 4000; transition: 0.4s ease; padding: 30px; display: flex; flex-direction: column; overflow-y: auto; }
         .cart-overlay.active { right: 0; }
-        .cart-input { width: 100%; background: #1a1a1a; color: white; border: 1px solid #333; padding: 15px; margin-bottom: 15px; border-radius: 8px; font-family: var(--font-body); }
-        .info-retirada { background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid var(--gold-soft); margin-bottom: 15px; font-size: 0.9rem; }
+        
+        /* FORMULÁRIO COM FONTE MAIOR */
+        .cart-input { width: 100%; background: #1a1a1a; color: white; border: 1px solid #333; padding: 16px; margin-bottom: 15px; border-radius: 8px; font-family: var(--font-body); font-size: 1.1rem; outline: none; }
+        .cart-input:focus { border-color: var(--gold-soft); }
+        .info-retirada { background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid var(--gold-soft); margin-bottom: 15px; font-size: 1rem; color: #fff; line-height: 1.4; }
 
-        #cart-toast { position: fixed; bottom: 120px; right: 25px; background: var(--gold-metallic); color: #000; padding: 12px 20px; border-radius: 12px; font-weight: bold; opacity: 0; transition: 0.4s; pointer-events: none; }
+        #cart-toast { position: fixed; bottom: 120px; right: 25px; background: var(--gold-metallic); color: #000; padding: 12px 20px; border-radius: 12px; font-weight: bold; font-size: 1rem; z-index: 3000; opacity: 0; transition: 0.4s; pointer-events: none; }
         #cart-toast.show { opacity: 1; transform: translateY(-10px); }
     </style>
 </head>
@@ -102,24 +103,24 @@
     <div class="backdrop" id="backdrop" onclick="toggleCart()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; display: none;"></div>
 
     <aside class="cart-overlay" id="cart-overlay">
-        <div style="display:flex; justify-content:space-between; margin-bottom:30px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
             <h3 style="color:var(--gold-soft); font-family:var(--font-premium); font-size:1.8rem;">Sua Sacola</h3>
             <span style="cursor:pointer; font-size:3rem; color:var(--gold-soft); line-height:1;" onclick="toggleCart()">&times;</span>
         </div>
         <div id="cart-items"></div>
         <div id="checkout-form" style="display:none; margin-top:20px; border-top:1px solid #333; padding-top:20px;">
-            <input type="text" id="cliente-nome" class="cart-input" placeholder="Seu Nome">
+            <input type="text" id="cliente-nome" class="cart-input" placeholder="Seu Nome Completo">
             <select id="metodo-entrega" class="cart-input" onchange="updateCart()"><option value="none" selected disabled>Como quer receber?</option><option value="tele">Tele Entrega (+ R$ 15,00)</option><option value="retirada">Retirada no Local (Grátis)</option></select>
-            <div id="box-retirada" class="info-retirada" style="display:none;">📍 Av. Bento Gonçalves, 4321</div>
+            <div id="box-retirada" class="info-retirada" style="display:none;">📍 <b>Ponto de Retirada:</b><br>Av. Bento Gonçalves, 4321</div>
             <div id="bloco-endereco" style="display:none;">
-                <input type="text" id="cep" class="cart-input" placeholder="CEP" maxlength="9" oninput="mascaraCEP(this)" onblur="buscaCEP()">
-                <input type="text" id="rua" class="cart-input" placeholder="Rua">
+                <input type="text" id="cep" class="cart-input" placeholder="CEP (00000-000)" maxlength="9" oninput="mascaraCEP(this)" onblur="buscaCEP()">
+                <input type="text" id="rua" class="cart-input" placeholder="Rua / Avenida">
                 <div style="display:flex; gap:10px;"><input type="text" id="numero" class="cart-input" placeholder="Nº" style="width:35%;"><input type="text" id="bairro" class="cart-input" placeholder="Bairro" style="width:65%;"></div>
                 <input type="text" id="cidade" class="cart-input" placeholder="Cidade">
             </div>
-            <select id="metodo-pagamento" class="cart-input"><option value="none" selected disabled>Forma de Pagamento</option><option value="Pix">Pix</option><option value="Dinheiro">Dinheiro</option><option value="Cartão">Cartão (na entrega)</option></select>
+            <select id="metodo-pagamento" class="cart-input"><option value="none" selected disabled>Qual a forma de pagamento?</option><option value="Pix">Pix</option><option value="Dinheiro">Dinheiro</option><option value="Cartão">Cartão (na entrega)</option></select>
             <div style="display:flex; justify-content:space-between; font-size:1.6rem; margin:20px 0; font-weight:bold;"><span>Total:</span><span id="cart-total" style="color:var(--gold-soft);">R$ 0,00</span></div>
-            <button onclick="checkout()" style="background:#25D366; color:white; border:none; width:100%; padding:22px; font-weight:bold; border-radius:12px; text-transform:uppercase; font-family: var(--font-body);">FINALIZAR NO WHATSAPP</button>
+            <button onclick="checkout()" style="background:#25D366; color:white; border:none; width:100%; padding:22px; font-weight:bold; border-radius:12px; text-transform:uppercase; font-family:var(--font-body); font-size:1.1rem; cursor:pointer;">FINALIZAR NO WHATSAPP</button>
         </div>
     </aside>
 
@@ -155,11 +156,7 @@
             if (cep.length !== 8) return;
             const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
             const data = await res.json();
-            if (!data.erro) { 
-                document.getElementById('rua').value = data.logradouro; 
-                document.getElementById('bairro').value = data.bairro; 
-                document.getElementById('cidade').value = data.localidade;
-            }
+            if (!data.erro) { document.getElementById('rua').value = data.logradouro; document.getElementById('bairro').value = data.bairro; document.getElementById('cidade').value = data.localidade; }
         }
 
         async function loadProducts() {
@@ -168,63 +165,35 @@
                 const text = await response.text();
                 const rows = text.split('\n').slice(1);
                 const vitrine = document.getElementById('vitrine');
-                
                 let html = '';
                 rows.forEach(row => {
                     const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
                     if (!cols || cols.length < 3) return;
                     const p = { id: cols[0].replace(/"/g, '').trim(), nome: cols[1].replace(/"/g, '').trim(), preco: parseFloat(cols[2].replace(/"/g, '').replace(',', '.').trim()), disponivel: cols[3] ? cols[3].replace(/"/g, '').trim().toLowerCase() === 'sim' : true };
-                    
                     const isOff = !p.disponivel;
-                    html += `
-                        <div class="card-produto ${isOff ? 'indisponivel' : ''}">
-                            ${isOff ? '<div class="selo-esgotado">ESGOTADO</div>' : ''}
-                            <div class="swiper swiper-produto">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide"><img src="${p.id}.png" class="foto-1" onerror="this.src='placeholder.png'"></div>
-                                    <div class="swiper-slide"><img src="${p.id}-2.png" class="foto-2" onerror="this.style.display='none'"></div>
-                                </div>
-                                <div class="swiper-pagination"></div>
-                            </div>
-                            <h3 style="margin-bottom:10px;">${p.nome}</h3>
-                            <p class="preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</p>
-                            <button class="btn-adicionar" ${isOff ? 'disabled' : `onclick="add('${p.id}', '${p.nome}', ${p.preco})"`}>
-                                ${isOff ? 'Indisponível' : 'Adicionar à Sacola'}
-                            </button>
-                        </div>`;
+                    html += `<div class="card-produto ${isOff ? 'indisponivel' : ''}">${isOff ? '<div class="selo-esgotado">ESGOTADO</div>' : ''}<div class="swiper swiper-produto"><div class="swiper-wrapper"><div class="swiper-slide"><img src="${p.id}.png" class="foto-1" onerror="this.src='placeholder.png'"></div><div class="swiper-slide"><img src="${p.id}-2.png" class="foto-2" onerror="this.style.display='none'"></div></div><div class="swiper-pagination"></div></div><h3 style="margin-bottom:10px;">${p.nome}</h3><p class="preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</p><button class="btn-adicionar" ${isOff ? 'disabled' : `onclick="add('${p.id}', '${p.nome}', ${p.preco})"`}>${isOff ? 'Indisponível' : 'Adicionar à Sacola'}</button></div>`;
                 });
                 vitrine.innerHTML = html;
-
-                // Ativa carrossel apenas em telas menores que 1024px
-                if (window.innerWidth < 1024) {
-                    document.querySelectorAll('.swiper-produto').forEach(el => {
-                        new Swiper(el, { pagination: { el: el.querySelector('.swiper-pagination'), clickable: true } });
-                    });
-                }
+                if (window.innerWidth < 1024) { document.querySelectorAll('.swiper-produto').forEach(el => { new Swiper(el, { pagination: { el: el.querySelector('.swiper-pagination'), clickable: true } }); }); }
             } catch (err) {}
         }
 
-        function toggleCart() { 
-            const cartUI = document.getElementById('cart-overlay'); 
-            const isActive = cartUI.classList.toggle('active');
-            document.getElementById('backdrop').style.display = isActive ? 'block' : 'none';
-        }
+        function toggleCart() { const cartUI = document.getElementById('cart-overlay'); const isActive = cartUI.classList.toggle('active'); document.getElementById('backdrop').style.display = isActive ? 'block' : 'none'; }
 
         function add(id, name, price) {
             const item = cart.find(i => i.id === id);
             if (item) item.qtd++; else cart.push({ id, name, price, qtd: 1 });
             updateCart();
+            
+            // Toast e Animação de Shake
             const toast = document.getElementById('cart-toast');
-            toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000);
-            document.getElementById('cart-btn').classList.add('shake-animation');
-            setTimeout(() => document.getElementById('cart-btn').classList.remove('shake-animation'), 500);
+            const btn = document.getElementById('cart-btn');
+            toast.classList.add('show');
+            btn.classList.add('shake-animation');
+            setTimeout(() => { toast.classList.remove('show'); btn.classList.remove('shake-animation'); }, 2000);
         }
 
-        function changeQtd(id, delta) {
-            const item = cart.find(i => i.id === id);
-            if (item) { item.qtd += delta; if (item.qtd <= 0) cart = cart.filter(i => i.id !== id); }
-            updateCart();
-        }
+        function changeQtd(id, delta) { const item = cart.find(i => i.id === id); if (item) { item.qtd += delta; if (item.qtd <= 0) cart = cart.filter(i => i.id !== id); } updateCart(); }
 
         function updateCart() {
             const itemsCont = document.getElementById('cart-items'); const totalCont = document.getElementById('cart-total'); const badge = document.getElementById('badge'); const form = document.getElementById('checkout-form');
@@ -232,18 +201,7 @@
             if (cart.length === 0) { itemsCont.innerHTML = '<p style="text-align:center; padding: 20px;">Sacola vazia.</p>'; form.style.display = 'none'; badge.innerText = "0"; return; }
             form.style.display = 'block'; itemsCont.innerHTML = '';
             let subtotal = 0, totalQtd = 0;
-            cart.forEach(i => { 
-                subtotal += i.price * i.qtd; totalQtd += i.qtd; 
-                itemsCont.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:10px;">
-                        <div><b>${i.name}</b><br><small style="color:var(--gold-soft);">R$ ${i.price.toFixed(2).replace('.', ',')}</small></div>
-                        <div style="display:flex; align-items:center; gap:15px;">
-                            <button onclick="changeQtd('${i.id}', -1)" style="background:none; border:1px solid var(--gold-soft); color:var(--gold-soft); width:30px; border-radius:5px; cursor:pointer;">-</button>
-                            <span style="font-weight:700;">${i.qtd}</span>
-                            <button onclick="changeQtd('${i.id}', 1)" style="background:none; border:1px solid var(--gold-soft); color:var(--gold-soft); width:30px; border-radius:5px; cursor:pointer;">+</button>
-                        </div>
-                    </div>`; 
-            });
+            cart.forEach(i => { subtotal += i.price * i.qtd; totalQtd += i.qtd; itemsCont.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:10px;"><div><b>${i.name}</b><br><small style="color:var(--gold-soft);">R$ ${i.price.toFixed(2).replace('.', ',')}</small></div><div style="display:flex; align-items:center; gap:15px;"><button onclick="changeQtd('${i.id}', -1)" style="background:none; border:1px solid var(--gold-soft); color:var(--gold-soft); width:30px; border-radius:5px; cursor:pointer;">-</button><span style="font-weight:700;">${i.qtd}</span><button onclick="changeQtd('${i.id}', 1)" style="background:none; border:1px solid var(--gold-soft); color:var(--gold-soft); width:30px; border-radius:5px; cursor:pointer;">+</button></div></div>`; });
             document.getElementById('bloco-endereco').style.display = (entrega === 'tele') ? 'block' : 'none';
             document.getElementById('box-retirada').style.display = (entrega === 'retirada') ? 'block' : 'none';
             if (entrega === 'tele') subtotal += 15;
