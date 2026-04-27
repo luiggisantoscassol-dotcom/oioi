@@ -1,10 +1,3 @@
-Esse detalhe visual é fundamental para o cliente não tentar comprar o que não tem. O erro aconteceu porque, ao refatorar o carrossel, as novas classes de imagem e o Swiper acabaram "escondendo" as regras de filtro que aplicavam o efeito preto e branco.
-
-Já corrigi o CSS para que, quando o produto tiver a classe `.indisponivel`, ele aplique o filtro `grayscale(1)` em todo o conteúdo do card (imagens e textos) e posicione o selo de esgotado exatamente no centro do carrossel.
-
-Aqui está o código completo e restaurado:
-
-```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -286,4 +279,3 @@ Aqui está o código completo e restaurado:
     </script>
 </body>
 </html>
-```
