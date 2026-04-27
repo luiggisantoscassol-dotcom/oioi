@@ -43,23 +43,19 @@
         }
 
         @media (max-width: 600px) {
-            .produtos-grid { 
-                display: flex; 
-                flex-direction: column; 
-                padding: 10px 20px 100px;
-            }
-            .card-produto { width: 100%; max-width: 100%; margin-bottom: 25px; }
+            .produtos-grid { display: flex; flex-direction: column; padding: 10px 20px 100px; }
+            .card-produto { width: 100%; margin-bottom: 25px; }
         }
 
         .card-produto { 
             background: var(--bg-card); padding: 30px; text-align: center; 
             border-radius: 20px; border: 1px solid #1a1a1a; position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            min-width: 0; /* Fix para o Swiper dentro de Grid */
+            min-width: 0; 
         }
 
         /* --- CARROSSEL DO PRODUTO --- */
-        .swiper-produto { width: 100%; height: 280px; margin-bottom: 20px; overflow: hidden; }
+        .swiper-produto { width: 100%; height: 280px; margin-bottom: 20px; overflow: hidden; position: relative; }
         .swiper-produto .swiper-slide { display: flex; justify-content: center; align-items: center; }
         .swiper-produto img { max-height: 260px; max-width: 100%; object-fit: contain; }
         .swiper-produto .swiper-pagination-bullet-active { background: var(--gold-soft) !important; }
@@ -142,13 +138,9 @@
         const SHEET_ID = "1MjcWuXWOXJGJ-vyei-C_Zg5SPWCeUd-NFQxLib2G6ho";
         const URL_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
         
-        // Inicializa Hero com observador
-        new Swiper('.swiper-hero', { 
-            loop: true, 
-            observer: true, 
-            observeParents: true,
-            pagination: { el: '.swiper-pagination' }, 
-            autoplay: { delay: 4000 } 
+        const swiperHero = new Swiper('.swiper-hero', { 
+            loop: true, observer: true, observeParents: true,
+            pagination: { el: '.swiper-pagination' }, autoplay: { delay: 4000 } 
         });
         
         let cart = [];
@@ -182,12 +174,7 @@
                 rows.forEach(row => {
                     const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
                     if (!cols || cols.length < 3) return;
-                    const p = { 
-                        id: cols[0].replace(/"/g, '').trim(), 
-                        nome: cols[1].replace(/"/g, '').trim(), 
-                        preco: parseFloat(cols[2].replace(/"/g, '').replace(',', '.').trim()), 
-                        disponivel: cols[3] ? cols[3].replace(/"/g, '').trim().toLowerCase() === 'sim' : true 
-                    };
+                    const p = { id: cols[0].replace(/"/g, '').trim(), nome: cols[1].replace(/"/g, '').trim(), preco: parseFloat(cols[2].replace(/"/g, '').replace(',', '.').trim()), disponivel: cols[3] ? cols[3].replace(/"/g, '').trim().toLowerCase() === 'sim' : true };
                     if (p.disponivel) ativos.push(p); else esgotados.push(p);
                 });
 
@@ -212,16 +199,17 @@
                         </div>`;
                 });
 
-                // Inicializa Swipers de produtos com observador para evitar bug de largura
-                document.querySelectorAll('.swiper-produto').forEach(el => {
-                    new Swiper(el, { 
-                        observer: true, 
-                        observeParents: true,
-                        pagination: { el: el.querySelector('.swiper-pagination'), clickable: true } 
+                // ATIVA OS CARROSSEIS DOS PRODUTOS APÓS CARREGAR
+                setTimeout(() => {
+                    document.querySelectorAll('.swiper-produto').forEach(el => {
+                        new Swiper(el, { 
+                            observer: true, observeParents: true,
+                            pagination: { el: el.querySelector('.swiper-pagination'), clickable: true } 
+                        });
                     });
-                });
+                }, 100);
 
-            } catch (err) { console.error("Erro ao carregar produtos:", err); }
+            } catch (err) { console.error(err); }
         }
 
         function toggleCart() { 
