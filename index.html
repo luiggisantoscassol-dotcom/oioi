@@ -2,280 +2,165 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cachaça do Tio Nan - Loja Oficial</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-dark: #070707; --bg-card: #111111;
-            --gold-metallic: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            --gold-soft: #d4af37; --text-light: #f5f5f5;
-            --font-premium: 'Playfair Display', serif; --font-body: 'Montserrat', sans-serif;
+            --gold: #d4af37;
+            --gold-soft: #e5c05b;
+            --bg: #070707;
+            --card-bg: #111;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { width: 100%; overflow-x: hidden; background-color: var(--bg-dark); color: var(--text-light); font-family: var(--font-body); }
+        body { background-color: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; margin: 0; }
 
-        /* --- ANIMAÇÃO SHAKE --- */
-        @keyframes shake {
-            0% { transform: scale(1); }
-            25% { transform: scale(1.1) rotate(10deg); }
-            50% { transform: scale(1.1) rotate(-10deg); }
-            75% { transform: scale(1.1) rotate(5deg); }
-            100% { transform: scale(1); }
-        }
-        .shake-animation { animation: shake 0.5s ease-in-out; }
+        /* --- GRID DE PRODUTOS --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        .grid-produtos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
 
-        /* --- HERO --- */
-        .swiper-hero { width: 100%; max-width: 500px; padding: 20px 0; margin: 0 auto; }
-        .swiper-hero img { max-width: 90%; max-height: 250px; border-radius: 12px; object-fit: contain; display: block; margin: 0 auto; }
-
-        .hero-section { text-align: center; padding: 20px 15px; }
-        .hero-section h1 { 
-            font-family: var(--font-premium); font-size: clamp(1.8rem, 8vw, 3.5rem); 
-            background: var(--gold-metallic); -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; font-style: italic; font-weight: 700;
-        }
-
-        /* --- VITRINE --- */
-        .produtos-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 30px; padding: 20px 5% 120px; max-width: 1200px; margin: 0 auto;
-        }
-
+        /* --- CARD DO PRODUTO --- */
         .card-produto { 
-            background: var(--bg-card); padding: 30px; text-align: center; 
-            border-radius: 20px; border: 1px solid #1a1a1a; position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--card-bg); 
+            border-radius: 15px; 
+            padding: 20px; 
+            text-align: center; 
+            border: 1px solid #222;
             transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* --- ESTILO PRODUTO ESGOTADO (RESTAURADO) --- */
-        .card-produto.indisponivel { 
-            filter: grayscale(1); 
-            opacity: 0.7;
-            pointer-events: none; /* Impede interações no carrossel e botão */
-        }
+        /* --- CORREÇÃO DO BUG DE IMAGENS --- */
+        .swiper-produto { width: 100%; height: 300px; margin-bottom: 15px; }
         
-        .selo-esgotado { 
-            position: absolute; 
-            top: 45%; 
-            left: 50%; 
-            transform: translate(-50%, -50%) rotate(-15deg); 
-            background: rgba(212, 0, 0, 0.9); 
-            color: white; 
-            padding: 12px; 
-            width: 110%; 
-            font-weight: 700; 
-            z-index: 100; 
-            text-align: center;
-            letter-spacing: 2px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        .swiper-slide img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            transition: opacity 0.4s ease;
         }
 
-        /* --- CARROSSEL PRODUTO (HÍBRIDO) --- */
-        .swiper-produto { width: 100%; height: 280px; margin-bottom: 20px; position: relative; overflow: hidden; }
-        .swiper-produto .swiper-slide { display: flex; justify-content: center; align-items: center; }
-        .swiper-produto img { max-height: 260px; max-width: 100%; object-fit: contain; transition: opacity 0.4s ease; }
+        /* Setinhas Douradas (Mobile) */
+        .swiper-button-next, .swiper-button-prev { 
+            color: var(--gold) !important; 
+            display: none; /* Escondido por padrão */
+        }
+        .swiper-button-next::after, .swiper-button-prev::after { font-size: 20px !important; font-weight: bold; }
 
-        .swiper-produto .swiper-pagination-bullet { background: #fff !important; opacity: 0.3; }
-        .swiper-produto .swiper-pagination-bullet-active { background: var(--gold-soft) !important; opacity: 1 !important; }
-
+        /* LÓGICA DESKTOP (PC) */
         @media (min-width: 1024px) {
-            .swiper-produto .swiper-pagination { display: none !important; }
-            .foto-2 { opacity: 0; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
-            .card-produto:not(.indisponivel):hover .foto-1 { opacity: 0; }
-            .card-produto:not(.indisponivel):hover .foto-2 { opacity: 1; }
+            .card-produto:hover { transform: translateY(-5px); border-color: var(--gold); }
+            
+            /* Efeito Hover: Troca da Foto 1 pela Foto 2 */
+            .card-produto:hover .foto-1 { opacity: 0; }
+            .card-produto:hover .foto-2 { opacity: 1 !important; }
+            
+            .foto-2 { 
+                position: absolute; 
+                top: 0; 
+                left: 0; 
+                opacity: 0; 
+                z-index: 2;
+            }
         }
 
+        /* LÓGICA MOBILE (Celular) */
         @media (max-width: 1023px) {
-            .produtos-grid { display: flex; flex-direction: column; padding: 10px 20px 100px; }
+            .swiper-button-next, .swiper-button-prev { display: flex; } /* Mostra setas no celular */
+            .foto-2 { opacity: 1 !important; position: relative !important; }
         }
 
-        .preco { font-family: var(--font-premium); font-size: 2.2rem; color: var(--gold-soft); margin-bottom: 20px; display: block; }
-        .btn-adicionar { background: var(--gold-metallic); color: #000; border: none; padding: 18px; width: 100%; font-weight: 700; cursor: pointer; border-radius: 10px; text-transform: uppercase; letter-spacing: 1px; font-family: var(--font-body); }
-        .btn-adicionar:disabled { background: #333; color: #666; cursor: not-allowed; }
-
-        /* --- SACOLA --- */
-        .cart-toggle { position: fixed; bottom: 30px; right: 25px; background: var(--gold-metallic); width: 75px; height: 75px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 2001; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .cart-toggle svg { width: 35px; height: 35px; fill: #000; }
-        .cart-count { position: absolute; top: 0; right: 0; background: #ff4444; color: white; min-width: 24px; height: 24px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; border: 2px solid #000; display: flex; justify-content: center; align-items: center; }
-
-        .cart-overlay { position: fixed; top: 0; right: -100%; width: 100%; max-width: 450px; height: 100vh; background: var(--bg-card); z-index: 4000; transition: 0.4s ease; padding: 30px; display: flex; flex-direction: column; overflow-y: auto; }
-        .cart-overlay.active { right: 0; }
+        /* --- TEXTOS E BOTÃO --- */
+        .produto-nome { font-size: 1.2rem; color: var(--gold); margin: 15px 0 5px; text-transform: uppercase; }
+        .produto-preco { font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; display: block; }
         
-        .cart-input { width: 100%; background: #1a1a1a; color: white; border: 1px solid #333; padding: 16px; margin-bottom: 15px; border-radius: 8px; font-family: var(--font-body); font-size: 1.1rem; outline: none; }
-        .cart-input:focus { border-color: var(--gold-soft); }
-        .info-retirada { background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid var(--gold-soft); margin-bottom: 15px; font-size: 1rem; color: #fff; line-height: 1.4; }
+        .btn-comprar {
+            background: var(--gold);
+            color: #000;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        .btn-comprar:hover { background: var(--gold-soft); transform: scale(1.05); }
 
-        #cart-toast { position: fixed; bottom: 120px; right: 25px; background: var(--gold-metallic); color: #000; padding: 12px 20px; border-radius: 12px; font-weight: bold; font-size: 1rem; z-index: 3000; opacity: 0; transition: 0.4s; pointer-events: none; }
-        #cart-toast.show { opacity: 1; transform: translateY(-10px); }
     </style>
 </head>
 <body>
 
-    <div id="cart-toast">Adicionado à sacola! 🏷️</div>
-
-    <div class="cart-toggle" onclick="toggleCart()" id="cart-btn">
-        <svg viewBox="0 0 24 24"><path d="M17,6H16V5c0-2.21-1.79-4-4-4S8,2.79,8,5v1H7C5.34,6,4,7.34,4,9v10c0,1.66,1.34,3,3,3h10c1.66,0,3-1.34,3-3V9 C20,7.34,18.66,6,17,6z M10,5c0-1.1,0.9-2,2-2s2,0.9,2,2v1h-4V5z M18,19c0,0.55-0.45,1-1,1H7c-0.55,0-1-0.45-1-1V9 c0-0.55,0.45-1,1-1h10c0.55,0,1,0.45,1,1V19z"/></svg>
-        <div class="cart-count" id="badge">0</div>
+    <div class="container">
+        <div id="vitrine" class="grid-produtos">
+            </div>
     </div>
-    
-    <div class="backdrop" id="backdrop" onclick="toggleCart()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; display: none;"></div>
-
-    <aside class="cart-overlay" id="cart-overlay">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-            <h3 style="color:var(--gold-soft); font-family:var(--font-premium); font-size:1.8rem;">Sua Sacola</h3>
-            <span style="cursor:pointer; font-size:3rem; color:var(--gold-soft); line-height:1;" onclick="toggleCart()">&times;</span>
-        </div>
-        <div id="cart-items"></div>
-        <div id="checkout-form" style="display:none; margin-top:20px; border-top:1px solid #333; padding-top:20px;">
-            <input type="text" id="cliente-nome" class="cart-input" placeholder="Seu Nome Completo">
-            <select id="metodo-entrega" class="cart-input" onchange="updateCart()"><option value="none" selected disabled>Como quer receber?</option><option value="tele">Tele Entrega (+ R$ 15,00)</option><option value="retirada">Retirada no Local (Grátis)</option></select>
-            <div id="box-retirada" class="info-retirada" style="display:none;">📍 <b>Ponto de Retirada:</b><br>Av. Bento Gonçalves, 4321</div>
-            <div id="bloco-endereco" style="display:none;">
-                <input type="text" id="cep" class="cart-input" placeholder="CEP (00000-000)" maxlength="9" oninput="mascaraCEP(this)" onblur="buscaCEP()">
-                <input type="text" id="rua" class="cart-input" placeholder="Rua / Avenida">
-                <div style="display:flex; gap:10px;"><input type="text" id="numero" class="cart-input" placeholder="Nº" style="width:35%;"><input type="text" id="bairro" class="cart-input" placeholder="Bairro" style="width:65%;"></div>
-                <input type="text" id="cidade" class="cart-input" placeholder="Cidade">
-            </div>
-            <select id="metodo-pagamento" class="cart-input"><option value="none" selected disabled>Qual a forma de pagamento?</option><option value="Pix">Pix</option><option value="Dinheiro">Dinheiro</option><option value="Cartão">Cartão (na entrega)</option></select>
-            <div style="display:flex; justify-content:space-between; font-size:1.6rem; margin:20px 0; font-weight:bold;"><span>Total:</span><span id="cart-total" style="color:var(--gold-soft);">R$ 0,00</span></div>
-            <button onclick="checkout()" style="background:#25D366; color:white; border:none; width:100%; padding:22px; font-weight:bold; border-radius:12px; text-transform:uppercase; font-family:var(--font-body); font-size:1.1rem; cursor:pointer;">FINALIZAR NO WHATSAPP</button>
-        </div>
-    </aside>
-
-    <main>
-        <div class="swiper swiper-hero">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide"><img src="passo1.png"></div>
-                <div class="swiper-slide"><img src="passo2.png"></div>
-                <div class="swiper-slide"><img src="passo3.png"></div>
-                <div class="swiper-slide"><img src="passo4.png"></div>
-            </div>
-            <div class="swiper-pagination"></div>
-        </div>
-        <section class="hero-section"><h1>Cachaça do Tio Nan</h1></section>
-        <div id="vitrine" class="produtos-grid"></div>
-    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
     <script>
         const SHEET_ID = "1MjcWuXWOXJGJ-vyei-C_Zg5SPWCeUd-NFQxLib2G6ho";
         const URL_CSV = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
-        new Swiper('.swiper-hero', { loop: true, pagination: { el: '.swiper-pagination' }, autoplay: { delay: 4000 } });
-        
-        let cart = [];
 
-        function mascaraCEP(campo) {
-            let v = campo.value.replace(/\D/g, "");
-            if (v.length > 5) v = v.substring(0, 5) + "-" + v.substring(5, 8);
-            campo.value = v;
-        }
-
-        async function buscaCEP() {
-            const cep = document.getElementById('cep').value.replace(/\D/g, '');
-            if (cep.length !== 8) return;
-            const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-            const data = await res.json();
-            if (!data.erro) { document.getElementById('rua').value = data.logradouro; document.getElementById('bairro').value = data.bairro; document.getElementById('cidade').value = data.localidade; }
-        }
-
-        async function loadProducts() {
+        async function carregarProdutos() {
             try {
                 const response = await fetch(URL_CSV + "&t=" + new Date().getTime());
-                const text = await response.text();
-                const rows = text.split('\n').slice(1);
+                const data = await response.text();
+                const rows = data.split('\n').slice(1);
                 const vitrine = document.getElementById('vitrine');
-                let html = '';
+
+                vitrine.innerHTML = '';
+
                 rows.forEach(row => {
                     const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                    if (!cols || cols.length < 3) return;
-                    const p = { id: cols[0].replace(/"/g, '').trim(), nome: cols[1].replace(/"/g, '').trim(), preco: parseFloat(cols[2].replace(/"/g, '').replace(',', '.').trim()), disponivel: cols[3] ? cols[3].replace(/"/g, '').trim().toLowerCase() === 'sim' : true };
-                    
-                    const isOff = !p.disponivel;
-                    html += `
-                        <div class="card-produto ${isOff ? 'indisponivel' : ''}">
-                            ${isOff ? '<div class="selo-esgotado">ESGOTADO</div>' : ''}
-                            <div class="swiper swiper-produto">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide"><img src="${p.id}.png" class="foto-1" onerror="this.src='placeholder.png'"></div>
-                                    <div class="swiper-slide"><img src="${p.id}-2.png" class="foto-2" onerror="this.style.display='none'"></div>
-                                </div>
-                                <div class="swiper-pagination"></div>
-                            </div>
-                            <h3 style="margin-bottom:10px;">${p.nome}</h3>
-                            <p class="preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</p>
-                            <button class="btn-adicionar" ${isOff ? 'disabled' : `onclick="add('${p.id}', '${p.nome}', ${p.preco})"`}>
-                                ${isOff ? 'Indisponível' : 'Adicionar à Sacola'}
-                            </button>
-                        </div>`;
-                });
-                vitrine.innerHTML = html;
+                    if (!cols || cols.length < 4) return;
 
+                    const nome = cols[1].replace(/"/g, '');
+                    const preco = cols[2].replace(/"/g, '');
+                    const disponivel = cols[3].replace(/"/g, '').toLowerCase().trim();
+                    
+                    // IDs das fotos no Drive (ajuste se necessário)
+                    const foto1 = cols[4] ? cols[4].replace(/"/g, '') : ''; 
+                    const foto2 = cols[5] ? cols[5].replace(/"/g, '') : '';
+
+                    if (disponivel === 'sim') {
+                        vitrine.innerHTML += `
+                            <div class="card-produto">
+                                <div class="swiper swiper-produto">
+                                    <div class="swiper-wrapper">
+                                        <div class="swiper-slide"><img src="${foto1}" class="foto-1"></div>
+                                        <div class="swiper-slide"><img src="${foto2}" class="foto-2"></div>
+                                    </div>
+                                    <div class="swiper-button-next"></div>
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="swiper-pagination"></div>
+                                </div>
+                                <h3 class="produto-nome">${nome}</h3>
+                                <span class="produto-preco">R$ ${preco}</span>
+                                <a href="https://wa.me/5551991448888?text=Olá! Gostaria de encomendar a ${nome}" class="btn-comprar">PEDIR NO WHATSAPP</a>
+                            </div>
+                        `;
+                    }
+                });
+
+                // INICIALIZA O SWIPER (Apenas se for Mobile)
                 if (window.innerWidth < 1024) {
-                    document.querySelectorAll('.swiper-produto').forEach(el => {
-                        new Swiper(el, { pagination: { el: el.querySelector('.swiper-pagination'), clickable: true } });
+                    new Swiper('.swiper-produto', {
+                        loop: true,
+                        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                        pagination: { el: '.swiper-pagination', clickable: true },
                     });
                 }
-            } catch (err) {}
+
+            } catch (error) {
+                console.error("Erro ao carregar vitrine:", error);
+            }
         }
 
-        function toggleCart() { const cartUI = document.getElementById('cart-overlay'); const isActive = cartUI.classList.toggle('active'); document.getElementById('backdrop').style.display = isActive ? 'block' : 'none'; }
-
-        function add(id, name, price) {
-            const item = cart.find(i => i.id === id);
-            if (item) item.qtd++; else cart.push({ id, name, price, qtd: 1 });
-            updateCart();
-            const toast = document.getElementById('cart-toast');
-            const btn = document.getElementById('cart-btn');
-            toast.classList.add('show');
-            btn.classList.add('shake-animation');
-            setTimeout(() => { toast.classList.remove('show'); btn.classList.remove('shake-animation'); }, 2000);
-        }
-
-        function changeQtd(id, delta) { const item = cart.find(i => i.id === id); if (item) { item.qtd += delta; if (item.qtd <= 0) cart = cart.filter(i => i.id !== id); } updateCart(); }
-
-        function updateCart() {
-            const itemsCont = document.getElementById('cart-items'); const totalCont = document.getElementById('cart-total'); const badge = document.getElementById('badge'); const form = document.getElementById('checkout-form');
-            const entrega = document.getElementById('metodo-entrega').value;
-            if (cart.length === 0) { itemsCont.innerHTML = '<p style="text-align:center; padding: 20px;">Sacola vazia.</p>'; form.style.display = 'none'; badge.innerText = "0"; return; }
-            form.style.display = 'block'; itemsCont.innerHTML = '';
-            let subtotal = 0, totalQtd = 0;
-            cart.forEach(i => { 
-                subtotal += i.price * i.qtd; totalQtd += i.qtd; 
-                itemsCont.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:10px;">
-                        <div><b>${i.name}</b><br><small style="color:var(--gold-soft);">R$ ${i.price.toFixed(2).replace('.', ',')}</small></div>
-                        <div style="display:flex; align-items:center; gap:15px;">
-                            <button onclick="changeQtd('${i.id}', -1)" style="background:none; border:1px solid var(--gold-soft); color:var(--gold-soft); width:30px; border-radius:5px; cursor:pointer;">-</button>
-                            <span style="font-weight:700;">${i.qtd}</span>
-                            <button onclick="changeQtd('${i.id}', 1)" style="background:none; border:1px solid var(--gold-soft); color:var(--gold-soft); width:30px; border-radius:5px; cursor:pointer;">+</button>
-                        </div>
-                    </div>`; 
-            });
-            document.getElementById('bloco-endereco').style.display = (entrega === 'tele') ? 'block' : 'none';
-            document.getElementById('box-retirada').style.display = (entrega === 'retirada') ? 'block' : 'none';
-            if (entrega === 'tele') subtotal += 15;
-            badge.innerText = totalQtd;
-            totalCont.innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
-        }
-
-        function checkout() {
-            const nome = document.getElementById('cliente-nome').value;
-            const entrega = document.getElementById('metodo-entrega').value;
-            const pag = document.getElementById('metodo-pagamento').value;
-            if(!nome || entrega === "none" || pag === "none") return alert("Preencha todos os campos para finalizar.");
-            let infoEntrega = (entrega === 'tele') ? `Tele (${document.getElementById('rua').value}, ${document.getElementById('numero').value}, ${document.getElementById('bairro').value} - ${document.getElementById('cidade').value})` : "Retirada (Av. Bento Gonçalves, 4321)";
-            let msg = `*NOVO PEDIDO*\n👤 Cliente: ${nome}\n`;
-            cart.forEach(i => msg += `✅ ${i.name} (x${i.qtd})\n`);
-            msg += `\n🛵 Entrega: ${infoEntrega}\n💳 Pagamento: ${pag}\n💰 TOTAL: ${document.getElementById('cart-total').innerText}`;
-            window.open(`https://wa.me/5551989067003?text=${encodeURIComponent(msg)}`);
-        }
-        loadProducts();
+        carregarProdutos();
     </script>
 </body>
 </html>
